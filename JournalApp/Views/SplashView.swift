@@ -9,10 +9,27 @@ import SwiftUI
 
 struct SplashView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack {
+            LinearGradient(colors: [.black, .gradientMid, .gradientLight], startPoint: .top, endPoint: .bottom)
+                .ignoresSafeArea()
+            VStack {
+                Image("SplashScreen")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 90)
+                Text("Journali")
+                    .font(.display)
+                    .foregroundStyle(.textPrimary)
+                    .shadow(color: .gray, radius: 1)
+                    .shadow(color: .gray, radius: 1)
+                Text("Your thoughts, your story")
+                    .font(.bodySupporting)
+                    .foregroundStyle(.textPrimary)
+                    .tracking(1)
+            }
+        }
     }
 }
-
 #Preview {
     SplashView()
 }
