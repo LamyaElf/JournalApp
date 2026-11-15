@@ -16,7 +16,7 @@ struct SplashView: View {
                 Image("SplashScreen")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 90)
+                    .frame(width: 100)
                 Text("Journali")
                     .font(.display)
                     .foregroundStyle(.textPrimary)
