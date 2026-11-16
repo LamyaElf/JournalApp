@@ -9,6 +9,7 @@ import SwiftUI
 
 struct JournalCardView: View {
     let entry: JournalEntry
+    @ObservedObject var viewModel: JournalViewModel
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8){
@@ -18,10 +19,14 @@ struct JournalCardView: View {
                     .font(.titleCard)
                     .foregroundStyle(.textAccent)
                 Spacer()
-                Image(systemName: entry.isBookmarked ? "bookmark.fill" : "bookmark")
-                    .font(.title2)
-                    .foregroundStyle(.textAccent)
-                
+                Button {
+                    viewModel.toggleBookmark(for: entry)
+                } label: {
+                    Image(systemName: entry.isBookmarked ? "bookmark.fill" : "bookmark")
+                        .font(.title2)
+                        .foregroundStyle(.textAccent)
+                }
+                .buttonStyle(.plain)
             }
             Text(entry.date.formatted(date: .numeric, time: .omitted))
                 .font(.captionS)
@@ -37,8 +42,7 @@ struct JournalCardView: View {
         .clipShape(RoundedRectangle(cornerRadius: 28))
     }
 }
-
 #Preview {
-    JournalCardView(entry: JournalEntry(title: "My Birthday", content: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh viverra non semper suscipit posuere a pede.", date: Date(), isBookmarked: true))
-           .preferredColorScheme(.dark)
+    JournalCardView(entry: JournalEntry(title: "My Birthday", content: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh viverra non semper suscipit posuere a pede.", date: Date(), isBookmarked: true), viewModel: JournalViewModel())
+        .preferredColorScheme(.dark)
 }

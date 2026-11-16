@@ -13,6 +13,11 @@ class JournalViewModel: ObservableObject {
     
     func addEntry(title: String, content: String){
         let newEntry = JournalEntry(title: title, content: content, date: Date(), isBookmarked: false)
-        entries.append(newEntry)
-    }
+        entries.append(newEntry)}
+    
+    func toggleBookmark(for entry: JournalEntry) {
+            if let index = entries.firstIndex(where: { $0.id == entry.id }) {
+                entries[index].isBookmarked.toggle()
+            }
+        }
 }

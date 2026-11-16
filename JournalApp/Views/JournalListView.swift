@@ -17,36 +17,40 @@ struct JournalListView: View {
                     EmptyStateView()
                 } else {
                     List (viewModel.entries) { entry in
-                        Text(entry.title)
+                        JournalCardView(entry: entry, viewModel: viewModel)
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
+                            .listRowInsets(EdgeInsets(top: 6, leading:20, bottom:6, trailing:20 ))
+                    }
+                    .listStyle(.plain)
+                }
+            }
+            .navigationTitle("Journal")
+            .toolbarTitleDisplayMode(.inlineLarge)
+            .toolbar{
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    Menu{
+                        Button("Sort by Bookmark"){}
+                        Divider()
+                        Button("Sort by Entry Date"){}
+                    } label: {
+                        Image(systemName:"line.3.horizontal.decrease")
+                    }
+                    Button{ showEditor = true
+                    } label: {
+                        Image(systemName:"plus")
                     }
                 }
-                }
-                .navigationTitle("Journal")
-                .toolbarTitleDisplayMode(.inlineLarge)
-                .toolbar{
-                    ToolbarItemGroup(placement: .topBarTrailing) {
-                        Menu{
-                            Button("Sort by Bookmark"){}
-                            Divider()
-                            Button("Sort by Entry Date"){}
-                        } label: {
-                            Image(systemName:"line.3.horizontal.decrease")
-                        }
-                        Button{ showEditor = true
-                        } label: {
-                            Image(systemName:"plus")
-                        }
-                    }
-                }
-                .searchable(text: $searchText)
-                .sheet(isPresented: $showEditor) {
-                    JournalEditorView(viewModel: viewModel)
-                           .presentationDragIndicator(.visible)
-                               }
+            }
+            .searchable(text: $searchText)
+            .sheet(isPresented: $showEditor) {
+                JournalEditorView(viewModel: viewModel)
+                    .presentationDragIndicator(.visible)
+            }
         }
     }
 }
 #Preview {
-        JournalListView()
-            .preferredColorScheme(.dark)
-    }
+    JournalListView()
+        .preferredColorScheme(.dark)
+}
