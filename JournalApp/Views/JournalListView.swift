@@ -10,6 +10,8 @@ struct JournalListView: View {
     @State private var searchText = ""
     @State private var showEditor = false
     @StateObject private var viewModel = JournalViewModel()
+    @State private var showDeleteAlert = false
+    @State private var entryToDelete: JournalEntry?
     var body: some View {
         NavigationStack{
             Group {
@@ -21,7 +23,15 @@ struct JournalListView: View {
                             .listRowBackground(Color.clear)
                             .listRowSeparator(.hidden)
                             .listRowInsets(EdgeInsets(top: 6, leading:20, bottom:6, trailing:20 ))
-                    }
+                            .swipeActions(edge: .trailing, allowsFullSwipe: false)
+                        {
+                            Button(role: .destructive) {
+                                entryToDelete = entry
+                                showDeleteAlert = true
+                            } label: {
+                                Image(systemName: "trash.fill")
+                            }
+                        }                    }
                     .listStyle(.plain)
                 }
             }
@@ -47,10 +57,19 @@ struct JournalListView: View {
                 JournalEditorView(viewModel: viewModel)
                     .presentationDragIndicator(.visible)
             }
+            .alert("Delete Journal?", isPresented: $showDeleteAlert) {
+                Button("Cancel", role: .cancel) { }
+                Button("Delete", role: .destructive) {
+                    if let entry = entryToDelete {
+                        viewModel.deleteEntry(entry)
+                    }
+                }
+            } message: {
+                Text("Are you sure you want to delete this journal?")
+            }
         }
     }
 }
 #Preview {
     JournalListView()
-        .preferredColorScheme(.dark)
 }

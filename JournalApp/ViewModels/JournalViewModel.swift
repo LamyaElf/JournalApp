@@ -33,4 +33,8 @@ class JournalViewModel: ObservableObject {
             entries[index].isBookmarked.toggle()
         }
     }
-}
+    func deleteEntry(_ entry: JournalEntry) {
+        entries.removeAll { $0.id == entry.id }
+    }
+        
+    }
