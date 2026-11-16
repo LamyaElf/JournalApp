@@ -12,7 +12,15 @@ struct JournalListView: View {
     @StateObject private var viewModel = JournalViewModel()
     var body: some View {
         NavigationStack{
-            EmptyStateView()
+            Group {
+                if viewModel.entries.isEmpty {
+                    EmptyStateView()
+                } else {
+                    List (viewModel.entries) { entry in
+                        Text(entry.title)
+                    }
+                }
+                }
                 .navigationTitle("Journal")
                 .toolbarTitleDisplayMode(.inlineLarge)
                 .toolbar{
