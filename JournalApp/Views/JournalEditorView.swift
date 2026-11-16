@@ -18,7 +18,7 @@ struct JournalEditorView: View {
             VStack(alignment: .leading){
                 TextField("Title", text: $title)
                     .font(.headingL)
-                    .foregroundStyle(.textPrimary)
+                    .foregroundStyle(.primary)
                 Text(Date.now.formatted(date: .numeric, time: .omitted))
                     .font(.captionM)
                     .foregroundStyle(.textSecondary)

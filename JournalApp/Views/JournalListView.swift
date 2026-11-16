@@ -16,7 +16,7 @@ struct JournalListView: View {
                 if viewModel.entries.isEmpty {
                     EmptyStateView()
                 } else {
-                    List (viewModel.entries) { entry in
+                    List (viewModel.displayedEntries) { entry in
                         JournalCardView(entry: entry, viewModel: viewModel)
                             .listRowBackground(Color.clear)
                             .listRowSeparator(.hidden)
@@ -30,9 +30,9 @@ struct JournalListView: View {
             .toolbar{
                 ToolbarItemGroup(placement: .topBarTrailing) {
                     Menu{
-                        Button("Sort by Bookmark"){}
+                        Button("Sort by Bookmark"){viewModel.sortOption = .bookmark }
                         Divider()
-                        Button("Sort by Entry Date"){}
+                        Button("Sort by Entry Date"){ viewModel.sortOption = .date }
                     } label: {
                         Image(systemName:"line.3.horizontal.decrease")
                     }
