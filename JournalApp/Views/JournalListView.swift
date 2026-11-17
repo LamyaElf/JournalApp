@@ -47,7 +47,7 @@ struct JournalListView: View {
                                 showDeleteAlert = true
                             } label: {
                                 Image(systemName: "trash.fill")
-                            }
+                            } .tint(.semanticDestructive)
                         }                    }
                     .listStyle(.plain)
                 }

@@ -87,6 +87,7 @@ struct JournalEditorView: View {
                         Image(systemName: "checkmark")
                     }
                     .buttonStyle(.glassProminent)
+                    .disabled(!hasChanges)
                 }
                 
             }
