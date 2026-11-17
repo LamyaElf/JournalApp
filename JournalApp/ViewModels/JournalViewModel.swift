@@ -15,13 +15,24 @@ enum SortOption {
 class JournalViewModel: ObservableObject {
     @Published var entries: [JournalEntry] = []
     @Published var sortOption: SortOption = .date
+    @Published var searchText = ""
     var displayedEntries: [JournalEntry] {
+        var result: [JournalEntry]
         switch sortOption {
         case .bookmark:
-            return entries.filter { $0.isBookmarked }
+            result = entries.filter { $0.isBookmarked }
         case .date:
-            return entries.sorted { $0.date > $1.date }
+            result = entries.sorted { $0.date > $1.date }
         }
+         
+        if !searchText.isEmpty {
+            result = result.filter {
+                $0.title.localizedCaseInsensitiveContains(searchText) ||
+                $0.content.localizedCaseInsensitiveContains(searchText)
+            }
+            
+        }
+        return result
     }
     
     func addEntry(title: String, content: String){

@@ -7,7 +7,6 @@
 
 import SwiftUI
 struct JournalListView: View {
-    @State private var searchText = ""
     @State private var showEditor = false
     @State private var showDeleteAlert = false
     @State private var entryToDelete: JournalEntry?
@@ -18,6 +17,20 @@ struct JournalListView: View {
             Group {
                 if viewModel.entries.isEmpty {
                     EmptyStateView()
+                } else if viewModel.displayedEntries.isEmpty {
+                    if !viewModel.searchText.isEmpty {
+                    ContentUnavailableView.search(text: viewModel.searchText)
+                    } else {
+                        ContentUnavailableView {
+                            Label("No Bookmarked Journal", systemImage: "bookmark")
+                        } description: {
+                            Text("Tap the bookmark icon on a journal to save it here")
+                        } actions: {
+                            Button("Show All Journals") {
+                                viewModel.sortOption = .date
+                            }
+                        }
+                    }
                 } else {
                     List (viewModel.displayedEntries) { entry in
                         JournalCardView(entry: entry, viewModel: viewModel)
@@ -56,13 +69,13 @@ struct JournalListView: View {
                     }
                 }
             }
-            .searchable(text: $searchText)
+            .searchable(text: $viewModel.searchText)
             .sheet(isPresented: $showEditor) {
                 JournalEditorView(viewModel: viewModel)
                     .presentationDragIndicator(.visible)
             }
             .sheet(item: $selectedEntry) { entry in
-               JournalEditorView(viewModel: viewModel, entryToEdit: entry)
+                JournalEditorView(viewModel: viewModel, entryToEdit: entry)
                     .presentationDragIndicator(.visible)
             }
             .alert("Delete Journal?", isPresented: $showDeleteAlert) {
@@ -78,6 +91,6 @@ struct JournalListView: View {
         }
     }
 }
-#Preview {
+    #Preview {
     JournalListView()
 }
