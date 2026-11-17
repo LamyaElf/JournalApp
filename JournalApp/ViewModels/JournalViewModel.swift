@@ -13,9 +13,16 @@ enum SortOption {
 }
 
 class JournalViewModel: ObservableObject {
-    @Published var entries: [JournalEntry] = []
+    @Published var entries: [JournalEntry] = [] {
+        didSet { save() }
+    }
     @Published var sortOption: SortOption = .date
     @Published var searchText = ""
+    private let saveURL = URL.documentsDirectory.appending(path: "journal.json")
+    
+    init() {
+        load()
+    }
     var displayedEntries: [JournalEntry] {
         var result: [JournalEntry]
         switch sortOption {
@@ -24,7 +31,7 @@ class JournalViewModel: ObservableObject {
         case .date:
             result = entries.sorted { $0.date > $1.date }
         }
-         
+        
         if !searchText.isEmpty {
             result = result.filter {
                 $0.title.localizedCaseInsensitiveContains(searchText) ||
@@ -55,5 +62,15 @@ class JournalViewModel: ObservableObject {
             
         }
     }
-        
+    private func save() {
+        if let data = try? JSONEncoder().encode(entries) {
+            try? data.write(to: saveURL)
+        }
     }
+    private func load() {
+        if let data = try? Data(contentsOf: saveURL),
+           let saved = try? JSONDecoder().decode([JournalEntry].self, from: data) {
+            entries = saved
+        }
+    }
+}

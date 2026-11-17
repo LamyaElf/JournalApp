@@ -93,4 +93,5 @@ struct JournalListView: View {
 }
     #Preview {
     JournalListView()
+     .preferredColorScheme(.dark)
 }

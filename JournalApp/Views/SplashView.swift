@@ -9,6 +9,10 @@ import SwiftUI
 
 struct SplashView: View {
     var body: some View {
+        ZStack {
+            LinearGradient(colors: [.black, .gradientMid, .gradientLight],
+                           startPoint: .top, endPoint: .bottom)
+            .ignoresSafeArea()
             VStack {
                 Image("SplashScreen")
                     .resizable()
@@ -25,7 +29,10 @@ struct SplashView: View {
                     .tracking(1)
             }
         }
+    }
 }
+
 #Preview {
     SplashView()
+        .preferredColorScheme(.dark)
 }
