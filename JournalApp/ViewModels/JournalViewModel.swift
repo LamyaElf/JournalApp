@@ -27,9 +27,9 @@ class JournalViewModel: ObservableObject {
         var result: [JournalEntry]
         switch sortOption {
         case .bookmark:
-            result = entries.filter { $0.isBookmarked }
+            result = entries.sorted { $0.isBookmarked && !$1.isBookmarked}
         case .date:
-            result = entries.sorted { $0.date > $1.date }
+            result = entries.sorted { $0.date < $1.date }
         }
         
         if !searchText.isEmpty {

@@ -14,6 +14,7 @@ struct JournalEditorView: View {
     @State private var title = ""
     @State private var content = ""
     @State private var showDiscardAlert = false
+    @FocusState private var isTitleFocused: Bool
     private var hasChanges: Bool {
         if let entry = entryToEdit {
             return title != entry.title || content != entry.content
@@ -27,6 +28,7 @@ struct JournalEditorView: View {
                 TextField("Title", text: $title)
                     .font(.headingL)
                     .foregroundStyle(.primary)
+                    .focused($isTitleFocused)
                 Text((entryToEdit?.date ?? Date.now).formatted(date: .numeric, time: .omitted))
                     .font(.captionM)
                     .foregroundStyle(.textSecondary)
@@ -35,6 +37,7 @@ struct JournalEditorView: View {
                         .font(.bodyL)
                         .padding(.leading, -5)
                         .scrollContentBackground(.hidden)
+                        .scrollDismissesKeyboard(.interactively)
                     if content.isEmpty {
                         Text("Type your Journal...")
                             .font(.bodyL)
@@ -52,8 +55,11 @@ struct JournalEditorView: View {
                     content = entry.content
                     
                 }
+                
+                if entryToEdit == nil {
+                    isTitleFocused = true
+                }
             }
-            
             .toolbar {
                 ToolbarItem (placement: .topBarLeading) {
                     Button{
