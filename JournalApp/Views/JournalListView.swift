@@ -9,9 +9,10 @@ import SwiftUI
 struct JournalListView: View {
     @State private var searchText = ""
     @State private var showEditor = false
-    @StateObject private var viewModel = JournalViewModel()
     @State private var showDeleteAlert = false
     @State private var entryToDelete: JournalEntry?
+    @State private var selectedEntry: JournalEntry?
+    @StateObject private var viewModel = JournalViewModel()
     var body: some View {
         NavigationStack{
             Group {
@@ -20,6 +21,9 @@ struct JournalListView: View {
                 } else {
                     List (viewModel.displayedEntries) { entry in
                         JournalCardView(entry: entry, viewModel: viewModel)
+                            .onTapGesture {
+                                selectedEntry = entry
+                            }
                             .listRowBackground(Color.clear)
                             .listRowSeparator(.hidden)
                             .listRowInsets(EdgeInsets(top: 6, leading:20, bottom:6, trailing:20 ))
@@ -55,6 +59,10 @@ struct JournalListView: View {
             .searchable(text: $searchText)
             .sheet(isPresented: $showEditor) {
                 JournalEditorView(viewModel: viewModel)
+                    .presentationDragIndicator(.visible)
+            }
+            .sheet(item: $selectedEntry) { entry in
+               JournalEditorView(viewModel: viewModel, entryToEdit: entry)
                     .presentationDragIndicator(.visible)
             }
             .alert("Delete Journal?", isPresented: $showDeleteAlert) {

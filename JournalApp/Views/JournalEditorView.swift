@@ -9,9 +9,10 @@ import SwiftUI
 
 struct JournalEditorView: View {
     @Environment(\.dismiss) private var dismiss
+    @ObservedObject var viewModel: JournalViewModel
+    var entryToEdit: JournalEntry? = nil
     @State private var title = ""
     @State private var content = ""
-    @ObservedObject var viewModel: JournalViewModel
     @State private var showDiscardAlert = false
     var body: some View {
         NavigationStack{
@@ -38,6 +39,14 @@ struct JournalEditorView: View {
                 .padding(.top, 24)
             }
             .padding(.horizontal, 20)
+            .onAppear {
+                if let entry = entryToEdit {
+                    title = entry.title
+                    content = entry.content
+                    
+                }
+            }
+            
             .toolbar {
                 ToolbarItem (placement: .topBarLeading) {
                     Button{
@@ -49,8 +58,8 @@ struct JournalEditorView: View {
                     } label: {
                         Image(systemName:"xmark")
                             .confirmationDialog("Are you sure you want to discard changes on this journal?",
-                            isPresented: $showDiscardAlert,
-                            titleVisibility: .visible)
+                                                isPresented: $showDiscardAlert,
+                                                titleVisibility: .visible)
                         {
                             Button("Discard Changes", role: .destructive) {
                                 dismiss()
@@ -61,7 +70,11 @@ struct JournalEditorView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button{
-                        viewModel.addEntry(title: title, content: content)
+                        if let entry = entryToEdit {
+                            viewModel.updateEntry(entry, title: title, content: content)
+                        } else {
+                            viewModel.addEntry(title: title, content: content)
+                        }
                         dismiss()
                     } label: {
                         Image(systemName: "checkmark")
