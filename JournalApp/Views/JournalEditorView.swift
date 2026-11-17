@@ -14,13 +14,20 @@ struct JournalEditorView: View {
     @State private var title = ""
     @State private var content = ""
     @State private var showDiscardAlert = false
+    private var hasChanges: Bool {
+        if let entry = entryToEdit {
+            return title != entry.title || content != entry.content
+        } else {
+            return !title.isEmpty || !content.isEmpty
+        }
+    }
     var body: some View {
         NavigationStack{
             VStack(alignment: .leading){
                 TextField("Title", text: $title)
                     .font(.headingL)
                     .foregroundStyle(.primary)
-                Text(Date.now.formatted(date: .numeric, time: .omitted))
+                Text((entryToEdit?.date ?? Date.now).formatted(date: .numeric, time: .omitted))
                     .font(.captionM)
                     .foregroundStyle(.textSecondary)
                 ZStack(alignment: .topLeading){
@@ -50,10 +57,10 @@ struct JournalEditorView: View {
             .toolbar {
                 ToolbarItem (placement: .topBarLeading) {
                     Button{
-                        if title.isEmpty && content.isEmpty {
-                            dismiss ()
-                        } else {
+                        if hasChanges {
                             showDiscardAlert = true
+                        } else {
+                            dismiss()
                         }
                     } label: {
                         Image(systemName:"xmark")
