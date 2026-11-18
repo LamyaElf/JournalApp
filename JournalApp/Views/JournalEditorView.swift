@@ -83,12 +83,18 @@ struct JournalEditorView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button{
-                        if hasChanges {
-                            if let entry = entryToEdit {
-                                viewModel.updateEntry(entry, title: title, content: content)
-                            } else {
-                                viewModel.addEntry(title: title, content: content)
-                            }
+                        if !hasChanges {
+                            dismiss()
+                            return
+                        }
+                        if title.trimmingCharacters(in: .whitespaces).isEmpty {
+                            isTitleFocused = true
+                            return
+                        }
+                        if let entry = entryToEdit {
+                            viewModel.updateEntry(entry, title: title, content: content)
+                        } else {
+                            viewModel.addEntry(title: title, content: content)
                         }
                         dismiss()
                     } label: {
