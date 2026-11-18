@@ -11,6 +11,7 @@
     ],
   },
   "files": [
+    { "path": "README.md", "target-membership": [ "JournalApp/resources" ] },
     { "kind": "folder", "path": "JournalApp", "target-membership": [ "JournalApp" ] },
     {
       "kind": "group",
