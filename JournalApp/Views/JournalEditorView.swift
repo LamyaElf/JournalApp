@@ -83,17 +83,18 @@ struct JournalEditorView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button{
-                        if let entry = entryToEdit {
-                            viewModel.updateEntry(entry, title: title, content: content)
-                        } else {
-                            viewModel.addEntry(title: title, content: content)
+                        if hasChanges {
+                            if let entry = entryToEdit {
+                                viewModel.updateEntry(entry, title: title, content: content)
+                            } else {
+                                viewModel.addEntry(title: title, content: content)
+                            }
                         }
                         dismiss()
                     } label: {
                         Image(systemName: "checkmark")
                     }
                     .buttonStyle(.glassProminent)
-                    .disabled(!hasChanges)
                 }
                 
             }

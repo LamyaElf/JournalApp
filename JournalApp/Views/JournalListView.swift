@@ -68,17 +68,27 @@ struct JournalListView: View {
                 JournalEditorView(viewModel: viewModel, entryToEdit: entry)
                     .presentationDragIndicator(.visible)
             }
-            .alert("Delete Journal?", isPresented: $showDeleteAlert) {
-                Button("Cancel", role: .cancel) { }
-                Button("Delete", role: .destructive) {
-                    if let entry = entryToDelete {
-                        viewModel.deleteEntry(entry)
-                    }
+        }
+        .overlay {
+            if showDeleteAlert {
+                ZStack {
+                    Color.black.opacity(0.4)
+                        .ignoresSafeArea()
+                        .onTapGesture { showDeleteAlert = false }
+                    
+                    DeleteAlertView(
+                        onCancel: { showDeleteAlert = false },
+                        onDelete: {
+                            if let entry = entryToDelete {
+                                viewModel.deleteEntry(entry)
+                            }
+                            showDeleteAlert = false
+                        }
+                    )
                 }
-            } message: {
-                Text("Are you sure you want to delete this journal?")
             }
         }
+        .animation(.easeInOut(duration: 0.2), value: showDeleteAlert)
     }
 }
 #Preview {
